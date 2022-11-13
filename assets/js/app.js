@@ -62,7 +62,7 @@ const recalculation = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/excha
                 
                 let dateStart = new window.Date(this.paydate);
                 let dateFinish = new window.Date(this.repaydate);
-                let arrayForCheckValidDate = this.obligation.map((item) => ((new window.Date(item.paydate) >= dateStart) && (new window.Date(item.repaydate) <= dateFinish)));
+                let arrayForCheckValidDate = this.obligation.map((item) => ((new window.Date(item.repaydate) >= dateStart) && (new window.Date(item.repaydate) <= dateFinish)));
                 // console.log(arrayForCheckValidDate);
                 let sum = 0;
                 for(let i = 0; i < Object.keys(arrayForCheckValidDate).length; i++){
