@@ -15,16 +15,17 @@
         <div class="colomns">
             <div>
                 <h3>Дата взятия в долг</h3>
-                <input @input="isCalcDate" v-model="paydate" type="date">
+                <input @input="isCalcStartDate(), isCalcEndDate()" v-model="paydate" type="date">
             </div>
             <div>
                 <h3>Дата до которой необходимо вернуть долг</h3>
-                <input @input="isCalcDate" v-model="repaydate" type="date">
+                <input @input="isCalcStartDate(), isCalcEndDate()" v-model="repaydate" type="date">
 
             </div>
         </div>
 
-        <h4>Взято в долг: {{paydate}}</h4>
+        <h4>Взято в долг: {{sumForStart}} млн. грн.</h4>
+        <h4>Надо вернуть: {{sumForEnd}} млн. грн.</h4>
 
     </div>
     

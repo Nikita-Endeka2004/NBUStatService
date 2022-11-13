@@ -11,7 +11,8 @@ const recalculation = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/excha
                 paydate: '',
                 repaydate: '',
                 obligation: [],
-                recalc: [],
+                sumForStart: 0,
+                sumForEnd: 0,
             }
         },
 
@@ -22,20 +23,29 @@ const recalculation = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/excha
             this.obligation = data;  
             let recal = await fetch(recalculation);
             recal = await recal.json();
-            this.recalc = recal;
-            console.log('Извемение валюты', recal);
+            for(let i = 0; i < Object.keys(data).length;i++){
+                
+                if(data[i].valcode === 'USD'){
+                    data[i].attraction = +(data[i].attraction * recal[25].rate).toFixed(2);
+                }
+                
+                if(data[i].valcode === 'EUR'){
+                    data[i].attraction = +(data[i].attraction * recal[32].rate).toFixed(2);
+                }
+            }
+            this.obligation = data;  
             console.log('Массив с датами', data);
 
         },
 
         methods:{
         
-            isCalcDate(){
+            isCalcStartDate(){
 
                 let dateStart = new window.Date(this.paydate);
                 let dateFinish = new window.Date(this.repaydate);
-                let arrayForCheckValidDate = this.obligation.map((item) => ((new window.Date(item.auctiondate) >= dateStart) && (new window.Date(item.auctiondate) <= dateFinish)));
-                console.log(arrayForCheckValidDate);
+                let arrayForCheckValidDate = this.obligation.map((item) => ((new window.Date(item.paydate) >= dateStart) && (new window.Date(item.paydate) <= dateFinish)));
+                //console.log(arrayForCheckValidDate);
                 let sum = 0;
                 for(let i = 0; i < Object.keys(arrayForCheckValidDate).length; i++){
                     if(arrayForCheckValidDate[i]){
@@ -43,25 +53,28 @@ const recalculation = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/excha
                     }
                 }
 
-                console.log(sum);
+                this.sumForStart = (sum / 1000000).toFixed(2);
+
+                //console.log(sum);
 
             },
-
-            forCurrencyTransfer(){
-
-                for(let i = 0; i < Object.keys(this.obligation).length;i++){
+            isCalcEndDate(){
                 
-                    if(this.obligation[i].valcode === 'USD'){
-                        this.obligation[i].attraction = this.obligation.attraction * this.recalc[25].rate;
-                    }
-                    
-                    if(this.obligation[i].valcode === 'EUR'){
-                        this.obligation[i].attraction = this.obligation.attraction * this.recalc[32].rate;
+                let dateStart = new window.Date(this.paydate);
+                let dateFinish = new window.Date(this.repaydate);
+                let arrayForCheckValidDate = this.obligation.map((item) => ((new window.Date(item.paydate) >= dateStart) && (new window.Date(item.repaydate) <= dateFinish)));
+                // console.log(arrayForCheckValidDate);
+                let sum = 0;
+                for(let i = 0; i < Object.keys(arrayForCheckValidDate).length; i++){
+                    if(arrayForCheckValidDate[i]){
+                        sum += +this.obligation[i].attraction;
                     }
                 }
+                // console.log(sum);
+
+                this.sumForEnd = (sum / 1000000).toFixed(2);
 
             },
-
 
         },
 

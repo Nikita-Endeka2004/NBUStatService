@@ -8,8 +8,16 @@
 }
 
 .colomns{
-    margin: auto 5%;
+    margin: auto 15%;
     display: grid;
     grid-template-columns: 1fr 1fr;
+
+}
+
+#app {
+
+    margin: 5% 10%;
+    border: 2px solid rosybrown;
+    background-color: azure;
 
 }
